@@ -14,26 +14,21 @@ model Picture {
 }
 
 model Character {
-  name        String    @unique
-  picture     Picture?  @relation(fields: [pictureId], references: [id])
-  pictureId   Int?
-  dimension   Dimension @relation(fields: [dimensionId], references: [id])
-  dimensionId Int
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  picture    Picture     @relation(fields: [pictureId], references: [id])
+  pictureId  Int
+  dimensions Dimension[]
 }
 
 model Dimension {
-  id         Int         @id @default(autoincrement())
-  coords     Coords[]
-  characters Character[]
-}
-
-model Coords {
-  id          Int        @id @default(autoincrement())
-  x           Int
-  y           Int
-  range       Int
-  dimension   Dimension? @relation(fields: [dimensionId], references: [id])
-  dimensionId Int?
+  id          Int       @id @default(autoincrement())
+  x           Float
+  y           Float
+  range       Float
+  name        String
+  characters  Character @relation(fields: [characterId], references: [id])
+  characterId Int
 }
 
 model User {
