@@ -1,7 +1,7 @@
 import { log } from "console";
 import { prisma } from "./prisma.js";
 // import Prisma from "@prisma/client";
-import { type Request, type Response } from "express";
+import { type Request, type Response, type NextFunction } from "express";
 
 // to obtain the matching location in the array, to change this i would need to replace the dimensions in the schema to json, which is a tangent im not interested in rn
 const dimensionMatches = {
@@ -14,12 +14,16 @@ const dimensionMatches = {
 };
 
 const createUser = async (req: Request, res: Response) => {
-  const bla = await prisma.user.create({
-    data: {
-      name: req.body.user,
-    },
-  });
-  res.json(bla);
+  try {
+    const bla = await prisma.user.create({
+      data: {
+        name: req.body.user,
+      },
+    });
+    res.json(bla);
+  } catch (e) {
+    res.status(400).json("Ivalid char name");
+  }
 };
 
 const addPic = async (req: Request, res: Response) => {
@@ -54,13 +58,70 @@ const getCharDimData = async (req: Request, res: Response) => {
   charData ? res.status(200).json(charData) : res.status(400).json(charData);
 };
 
-const makeGuess = async (req: Request, res: Response) => {
-  const { x, y, user, dimensions, name } = req.body;
+// TODO: figure out whether this should be a middleware or not
+const scoreInit = async (req: Request, res: Response, next: NextFunction) => {
+  const now = new Date();
+  const { user, pictureId } = req.body;
+
+  try {
+    const userExists = await prisma.user.findFirst({
+      where: {
+        name: user,
+      },
+    });
+
+    if (userExists) {
+      res.locals.user = userExists;
+    } else {
+      const initUser = await prisma.user.create({
+        data: {
+          name: user,
+        },
+      });
+      res.locals.user = initUser;
+    }
+  } catch (e) {
+    console.log(`Error: ${e}`);
+  }
+
+  try {
+    const scoreExists = await prisma.score.findFirst({
+      where: {
+        pictureId: Number(pictureId),
+        userId: res.locals.user.id,
+      },
+    });
+
+    if (!scoreExists) {
+      await prisma.score.create({
+        data: {
+          pictureId: Number(pictureId),
+          hits: 0,
+          userId: res.locals.user.id,
+          timeStarted: now.toISOString(),
+        },
+      });
+    }
+    next();
+  } catch (e) {
+    console.log(e);
+
+    res
+      .status(500)
+      .json("Unable to set a starting score. Try checking the userName given.");
+  }
+};
+
+const tryHit = async (req: Request, res: Response, next: NextFunction) => {
+  const { x, y, user, dimensions, name, pictureId } = req.body;
+  // TODO: check to see if the user has guessed all the characters in the picture, if so, ping add to the score, add the final time, and send the amount of time taken.
+  // ideally the frontend asks the user if they want to assign a name to their score, which should call setName
 
   try {
     const guess = await prisma.character.findFirst({
       where: {
         name: name,
+        pictureId: Number(pictureId),
       },
       include: {
         dimensions: {
@@ -82,7 +143,7 @@ const makeGuess = async (req: Request, res: Response) => {
         y <= guessDim?.y + (guessDim?.range ? guessDim?.range : 0.07)
       ) {
         console.log("Win");
-        res.status(200).json({ hit: true });
+        next();
       } else {
         console.log("Loss");
         res.status(200).json({ hit: false });
@@ -101,10 +162,49 @@ const makeGuess = async (req: Request, res: Response) => {
     // }
     throw e;
   }
-
-  res.status(200).json({ hit: false });
-
-  // res.json(200).json();
 };
+
+const makeGuess = [
+  scoreInit,
+  tryHit,
+  async (req: Request, res: Response) => {
+    let user = res.locals.user;
+    try {
+      let score = await prisma.score.findFirst({
+        where: {
+          userId: user.id,
+        },
+      });
+      if (score) {
+        const picture = await prisma.picture.findFirst({
+          where: {
+            id: score?.pictureId,
+          },
+          include: {
+            Characters: {},
+          },
+        });
+
+        await prisma.score.update({
+          where: {
+            userId: user.id,
+          },
+          data: {
+            hits: score.hits + 1,
+          },
+        });
+
+        // TODO: replace 3 below with picture?.Characters.length
+        if (score.hits == 3) {
+          res.status(200).json({ hit: true, gameComplete: true });
+        } else {
+          res.status(200).json({ hit: true });
+        }
+      }
+    } catch (e) {
+      console.log("Could not increase score");
+    }
+  },
+];
 
 export { addPic, addChar, getCharDimData, makeGuess };

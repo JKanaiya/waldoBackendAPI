@@ -38,11 +38,12 @@ model User {
 }
 
 model Score {
-  id            Int      @id @default(autoincrement())
-  picture       Picture  @relation(fields: [pictureId], references: [id])
+  id            Int       @id @default(autoincrement())
+  picture       Picture   @relation(fields: [pictureId], references: [id])
+  hits          Int
   pictureId     Int
-  user          User     @relation(fields: [userId], references: [id])
-  userId        Int
+  user          User      @relation(fields: [userId], references: [id])
+  userId        Int       @unique
   timeStarted   DateTime
-  timeCompleted DateTime
+  timeCompleted DateTime?
 }

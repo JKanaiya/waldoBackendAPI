@@ -33,14 +33,15 @@ describe("api calls for waldo game", () => {
         dimensions: "default",
         x: 0.8,
         y: 0.5,
-        user: "user",
+        user: "user1",
+        pictureId: 1,
       })
       .expect(200);
 
     expect(res.body.hit).toBe(true);
   });
 
-  it("Inccurate guesses return a miss", async () => {
+  it("Inccurate guesses do not increment score for the user", async () => {
     const res = await request(app)
       .post("/guess")
       .expect("Content-Type", /json/)
@@ -50,10 +51,50 @@ describe("api calls for waldo game", () => {
         dimensions: "default",
         x: 0.5,
         y: 0.8,
-        user: "user",
+        user: "user1",
+        pictureId: 1,
       })
       .expect(200);
 
     expect(res.body.hit).toBe(false);
+  });
+
+  it("Correct hit increases score for the user", async () => {
+    const res = await request(app)
+      .post("/guess")
+      .expect("Content-Type", /json/)
+      .set("Accept", "application/json")
+      .send({
+        name: "waldo",
+        dimensions: "default",
+        x: 0.8,
+        y: 0.5,
+        user: "user1",
+        pictureId: 1,
+      })
+      .expect(200);
+
+    expect(res.body.hit).toBe(true);
+  });
+
+  it("3 hits returns a finished game ", async () => {
+    let res;
+    for (let i = 1; i < 3; i++) {
+      res = await request(app)
+        .post("/guess")
+        .expect("Content-Type", /json/)
+        .set("Accept", "application/json")
+        .send({
+          name: "waldo",
+          dimensions: "default",
+          x: 0.8,
+          y: 0.5,
+          user: "user",
+          pictureId: 1,
+        })
+        .expect(200);
+    }
+
+    expect(res?.body.hit).toBe(true);
   });
 });

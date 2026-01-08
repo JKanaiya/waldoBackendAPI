@@ -39,6 +39,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await prisma.dimension.deleteMany({});
+  await prisma.score.deleteMany({});
   await prisma.character.deleteMany({});
   await prisma.picture.deleteMany({});
 });
