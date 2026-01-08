@@ -79,7 +79,7 @@ describe("api calls for waldo game", () => {
 
   it("3 hits returns a finished game ", async () => {
     let res;
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i <= 3; i++) {
       res = await request(app)
         .post("/guess")
         .expect("Content-Type", /json/)
@@ -95,6 +95,6 @@ describe("api calls for waldo game", () => {
         .expect(200);
     }
 
-    expect(res?.body.hit).toBe(true);
+    expect(res?.body.gameComplete).toBe(true);
   });
 });

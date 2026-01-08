@@ -194,11 +194,20 @@ const makeGuess = [
           },
         });
 
-        // TODO: replace 3 below with picture?.Characters.length
-        if (score.hits == 3) {
-          res.status(200).json({ hit: true, gameComplete: true });
-        } else {
-          res.status(200).json({ hit: true });
+        const totalHits = await prisma.score.findFirst({
+          where: {
+            pictureId: score.pictureId,
+            userId: user.id,
+          },
+        });
+
+        if (totalHits) {
+          // TODO: replace 3 below with picture?.Characters.length
+          if (totalHits?.hits >= 3) {
+            res.status(200).json({ hit: true, gameComplete: true });
+          } else {
+            res.status(200).json({ hit: true });
+          }
         }
       }
     } catch (e) {
