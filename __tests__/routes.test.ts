@@ -97,4 +97,19 @@ describe("api calls for waldo game", () => {
 
     expect(res?.body.gameComplete).toBe(true);
   });
+
+  it("Changing name from initial to desired", async () => {
+    let res;
+    res = await request(app)
+      .patch("/name")
+      .expect("Content-Type", /json/)
+      .set("Accept", "application/json")
+      .send({
+        name: "desired",
+        initName: "user",
+      })
+      .expect(200);
+
+    expect(res?.body.nameChanged).toBe(true);
+  });
 });

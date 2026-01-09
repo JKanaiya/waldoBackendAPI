@@ -1,6 +1,4 @@
-import { log } from "console";
 import { prisma } from "./prisma.js";
-// import Prisma from "@prisma/client";
 import { type Request, type Response, type NextFunction } from "express";
 
 // to obtain the matching location in the array, to change this i would need to replace the dimensions in the schema to json, which is a tangent im not interested in rn
@@ -11,19 +9,6 @@ const dimensionMatches = {
   "800": 3,
   "600": 4,
   "400": 5,
-};
-
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const bla = await prisma.user.create({
-      data: {
-        name: req.body.user,
-      },
-    });
-    res.json(bla);
-  } catch (e) {
-    res.status(400).json("Ivalid char name");
-  }
 };
 
 const addPic = async (req: Request, res: Response) => {
@@ -56,6 +41,35 @@ const getCharDimData = async (req: Request, res: Response) => {
   });
 
   charData ? res.status(200).json(charData) : res.status(400).json(charData);
+};
+
+const changeName = async (req: Request, res: Response) => {
+  const { name, initName } = req.body;
+
+  const userExists = await prisma.user.findFirst({
+    where: {
+      name: initName,
+    },
+  });
+
+  if (userExists) {
+    try {
+      await prisma.user.update({
+        where: {
+          id: userExists.id,
+          name: initName,
+        },
+        data: {
+          desiredName: name,
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    res.status(200).json({ nameChanged: true });
+  } else {
+    res.status(400).json("Invalid name input");
+  }
 };
 
 // TODO: figure out whether this should be a middleware or not
@@ -113,9 +127,11 @@ const scoreInit = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const tryHit = async (req: Request, res: Response, next: NextFunction) => {
-  const { x, y, user, dimensions, name, pictureId } = req.body;
+  const { x, y, user, dimension, name, pictureId } = req.body;
   // TODO: check to see if the user has guessed all the characters in the picture, if so, ping add to the score, add the final time, and send the amount of time taken.
   // ideally the frontend asks the user if they want to assign a name to their score, which should call setName
+  //
+  console.log(dimension);
 
   try {
     const guess = await prisma.character.findFirst({
@@ -126,13 +142,13 @@ const tryHit = async (req: Request, res: Response, next: NextFunction) => {
       include: {
         dimensions: {
           where: {
-            name: dimensions,
+            name: dimension,
           },
         },
       },
     });
 
-    const guessDim = guess?.dimensions[dimensionMatches[dimensions]];
+    const guessDim = guess?.dimensions[0];
 
     if (
       x >= guessDim?.x - (guessDim?.range ? guessDim?.range : 0.03) &&
@@ -176,15 +192,15 @@ const makeGuess = [
         },
       });
       if (score) {
-        const picture = await prisma.picture.findFirst({
-          where: {
-            id: score?.pictureId,
-          },
-          include: {
-            Characters: {},
-          },
-        });
-
+        // const picture = await prisma.picture.findFirst({
+        //   where: {
+        //     id: score?.pictureId,
+        //   },
+        //   include: {
+        //     Characters: {},
+        //   },
+        // });
+        //
         await prisma.score.update({
           where: {
             userId: user.id,
@@ -216,4 +232,4 @@ const makeGuess = [
   },
 ];
 
-export { addPic, addChar, getCharDimData, makeGuess };
+export { addPic, addChar, getCharDimData, makeGuess, changeName };

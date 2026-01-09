@@ -32,9 +32,10 @@ model Dimension {
 }
 
 model User {
-  id     Int     @id @default(autoincrement())
-  name   String
-  scores Score[]
+  id          Int     @id @default(autoincrement())
+  name        String
+  desiredName String?
+  scores      Score[]
 }
 
 model Score {
