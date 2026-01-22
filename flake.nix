@@ -36,7 +36,7 @@
         # prisma-language-server
       ];
       # database env vars 
-      DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/test_waldo;
+      DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/waldo;
       TEST_DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/test_waldo;
 
       shellHook = ''
