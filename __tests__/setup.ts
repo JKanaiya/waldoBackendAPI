@@ -1,14 +1,7 @@
-import { beforeAll, afterEach, afterAll, beforeEach } from "vitest";
+import { beforeAll, afterAll } from "vitest";
 import "dotenv/config";
 import supertest, { type SuperTest, Test } from "supertest";
-import { Server } from "http";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client.js";
-
-const connectionString = `${process.env.TEST_DATABASE_URL}`;
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+import { prisma } from "../controllers/prisma.js";
 
 let request: SuperTest<Test>;
 

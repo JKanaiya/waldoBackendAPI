@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test vitest",
-    "dev": "NODE_ENV=development npx tsx app.ts",
-    "dbdev": "NODE_ENV=development npx tsx --inspect app.ts"
+    "dev": "NODE_ENV=development tsx app.ts",
+    "dbdev": "NODE_ENV=development tsx --inspect app.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,7 @@
   "type": "module",
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
+    "@prisma/client": "^7.3.0",
     "bcrypt-ts": "^8.0.0",
     "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.1",
@@ -29,7 +29,8 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "pg": "^8.16.3"
+    "pg": "^8.16.3",
+    "prisma": "^7.2.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -39,7 +40,6 @@
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.3",
     "jest": "^30.2.0",
-    "prisma": "^7.2.0",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
