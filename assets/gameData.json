@@ -1,0 +1,64 @@
+{
+  "pictures": [
+    {
+      "id": 1,
+      "characters": [
+        {
+          "name": "waldo",
+          "id": 2,
+          "pictureId": 1
+        }
+      ],
+      "dimensions": [
+        {
+          "id": 3,
+          "characterId": 2,
+          "name": "default",
+          "x": 0.8,
+          "y": 0.5,
+          "range": 0.03
+        },
+        {
+          "id": 4,
+          "characterId": 2,
+          "name": "max1800",
+          "x": 0.82,
+          "y": 0.73,
+          "range": 0.05
+        },
+        {
+          "id": 5,
+          "characterId": 2,
+          "name": "max1200",
+          "x": 0.82,
+          "y": 0.5,
+          "range": 0.04
+        },
+        {
+          "id": 6,
+          "characterId": 2,
+          "name": "max800",
+          "x": 0.82,
+          "y": 0.5,
+          "range": 0.04
+        },
+        {
+          "id": 7,
+          "characterId": 2,
+          "name": "max600",
+          "x": 0.8,
+          "y": 0.7,
+          "range": 0.05
+        },
+        {
+          "id": 8,
+          "characterId": 2,
+          "name": "max400",
+          "x": 0.6,
+          "y": 0.6,
+          "range": 0.01
+        }
+      ]
+    }
+  ]
+}

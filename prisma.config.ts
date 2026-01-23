@@ -12,6 +12,7 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
+    seed: "tsx controllers/dbSetup.ts"
   },
   datasource: {
     url: env(connectionString),

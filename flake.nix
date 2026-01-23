@@ -29,12 +29,17 @@
         typescript-language-server
         tsx
 
+        jsonfmt
+        jsonschema
+
         # Prisma CLI and Language Server
         prisma_7
-        # openssl_3
+        openssl_3
         prisma-engines_7
         # prisma-language-server
       ];
+        # TODO: struct this properly, such that the direnv uses this automatically
+
       # database env vars 
       DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/waldo;
       TEST_DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/test_waldo;
