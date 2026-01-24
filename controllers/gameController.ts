@@ -131,8 +131,6 @@ const tryHit = async (req: Request, res: Response, next: NextFunction) => {
   // TODO: check to see if the user has guessed all the characters in the picture, if so, ping add to the score, add the final time, and send the amount of time taken.
   // ideally the frontend asks the user if they want to assign a name to their score, which should call setName
   //
-  console.log(dimension);
-
   try {
     const guess = await prisma.character.findFirst({
       where: {
@@ -142,13 +140,17 @@ const tryHit = async (req: Request, res: Response, next: NextFunction) => {
       include: {
         dimensions: {
           where: {
-            name: dimension,
+            name: dimension == 'default' ? dimension : `max${dimension}`,
           },
         },
       },
     });
 
     const guessDim = guess?.dimensions[0];
+
+    console.log(x);
+    console.log(guessDim.x);
+    console.log(guessDim.range);
 
     if (
       x >= guessDim?.x - (guessDim?.range ? guessDim?.range : 0.03) &&

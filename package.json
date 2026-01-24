@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test vitest",
-    "dev": "NODE_ENV=development tsx app.ts",
+    "dev": "NODE_ENV=development tsx --watch app.ts",
     "dbdev": "NODE_ENV=development tsx --inspect app.ts"
   },
   "keywords": [],
