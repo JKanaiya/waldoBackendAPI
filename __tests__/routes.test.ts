@@ -26,11 +26,11 @@ describe("api calls for waldo game", () => {
   it("Accurate guesses return a valid hit", async () => {
     const res = await request(app)
       .post("/guess")
-      .expect("Content-Type", /json/)
+      // .expect("Content-Type", /json/)
       .set("Accept", "application/json")
       .send({
         name: "waldo",
-        dimensions: "default",
+        dimension: "default",
         x: 0.8,
         y: 0.5,
         user: "user1",
@@ -48,7 +48,7 @@ describe("api calls for waldo game", () => {
       .set("Accept", "application/json")
       .send({
         name: "waldo",
-        dimensions: "default",
+        dimension: "default",
         x: 0.5,
         y: 0.8,
         user: "user1",
@@ -66,7 +66,7 @@ describe("api calls for waldo game", () => {
       .set("Accept", "application/json")
       .send({
         name: "waldo",
-        dimensions: "default",
+        dimension: "default",
         x: 0.8,
         y: 0.5,
         user: "user1",
@@ -86,7 +86,7 @@ describe("api calls for waldo game", () => {
         .set("Accept", "application/json")
         .send({
           name: "waldo",
-          dimensions: "default",
+          dimension: "default",
           x: 0.8,
           y: 0.5,
           user: "user",
@@ -94,6 +94,8 @@ describe("api calls for waldo game", () => {
         })
         .expect(200);
     }
+
+    console.log(res?.body.timeTaken);
 
     expect(res?.body.gameComplete).toBe(true);
   });

@@ -1,3 +1,4 @@
+import { log } from "node:console";
 import { prisma } from "./prisma.js";
 import { type Request, type Response, type NextFunction } from "express";
 
@@ -148,10 +149,6 @@ const tryHit = async (req: Request, res: Response, next: NextFunction) => {
 
     const guessDim = guess?.dimensions[0];
 
-    console.log(x);
-    console.log(guessDim.x);
-    console.log(guessDim.range);
-
     if (
       x >= guessDim?.x - (guessDim?.range ? guessDim?.range : 0.03) &&
       x <= guessDim?.x + (guessDim?.range ? guessDim?.range : 0.03)
@@ -194,15 +191,15 @@ const makeGuess = [
         },
       });
       if (score) {
-        // const picture = await prisma.picture.findFirst({
-        //   where: {
-        //     id: score?.pictureId,
-        //   },
-        //   include: {
-        //     Characters: {},
-        //   },
-        // });
-        //
+        const picture = await prisma.picture.findFirst({
+          where: {
+            id: score?.pictureId,
+          },
+          include: {
+            Characters: {},
+          },
+        });
+
         await prisma.score.update({
           where: {
             userId: user.id,
@@ -222,7 +219,19 @@ const makeGuess = [
         if (totalHits) {
           // TODO: replace 3 below with picture?.Characters.length
           if (totalHits?.hits >= 3) {
-            res.status(200).json({ hit: true, gameComplete: true });
+            const now = new Date();
+            const tCompleted = now.toISOString();
+            await prisma.score.update({
+              where: {
+                pictureId: score.pictureId,
+                userId: user.id
+              },
+              data: {
+                timeCompleted: tCompleted
+              }
+            })
+            const tStarted = new Date(totalHits.timeStarted)
+            res.status(200).json({ hit: true, gameComplete: true, timeTaken: (now.getTime() - tStarted.getTime()) / 1000 });
           } else {
             res.status(200).json({ hit: true });
           }
