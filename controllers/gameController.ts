@@ -149,6 +149,9 @@ const tryHit = async (req: Request, res: Response, next: NextFunction) => {
 
     const guessDim = guess?.dimensions[0];
 
+    // console.log(`y: ${y}, other y: ${guessDim?.y}`)
+    // console.log(`x: ${x}, other x: ${guessDim?.x}`)
+
     if (
       x >= guessDim?.x - (guessDim?.range ? guessDim?.range : 0.03) &&
       x <= guessDim?.x + (guessDim?.range ? guessDim?.range : 0.03)
