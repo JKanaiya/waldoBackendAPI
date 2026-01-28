@@ -1,5 +1,5 @@
 import { log } from "node:console";
-import { prisma } from "./prisma.js";
+import { prisma } from "./prisma.ts";
 import { type Request, type Response, type NextFunction } from "express";
 
 // to obtain the matching location in the array, to change this i would need to replace the dimensions in the schema to json, which is a tangent im not interested in rn
