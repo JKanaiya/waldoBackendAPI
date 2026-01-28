@@ -5,7 +5,7 @@ import {
   getCharDimData,
   makeGuess,
   changeName,
-} from "../controllers/gameController.js";
+} from "../controllers/gameController.ts";
 
 const indexRouter = express.Router();
 
