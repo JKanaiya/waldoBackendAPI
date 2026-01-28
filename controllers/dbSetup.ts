@@ -1,4 +1,4 @@
-import { prisma } from "./prisma.ts";
+import { prisma } from "./prisma.js";
 import pictures from "../assets/gameData.json";
 
 
