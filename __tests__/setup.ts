@@ -1,7 +1,7 @@
 import { beforeAll, afterAll } from "vitest";
 import "dotenv/config";
 import supertest, { type SuperTest, Test } from "supertest";
-import { prisma } from "../controllers/prisma.js";
+import { prisma } from "../controllers/prisma.ts";
 
 let request: SuperTest<Test>;
 
