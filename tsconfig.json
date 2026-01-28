@@ -10,7 +10,8 @@
     "module": "NodeNext",
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "NodeNext",
-    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true,
+    // "rewriteRelativeImportExtensions": true,
     "target": "ESNext",
     "types": [],
     // For nodejs:
