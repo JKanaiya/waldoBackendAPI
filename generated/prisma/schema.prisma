@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+  runtime  = "nodejs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Picture {
+  id         Int         @id @default(autoincrement())
+  Characters Character[]
+  scores     Score[]
+}
+
+model Character {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  picture    Picture     @relation(fields: [pictureId], references: [id])
+  pictureId  Int
+  dimensions Dimension[]
+}
+
+model Dimension {
+  id          Int       @id @default(autoincrement())
+  x           Float
+  y           Float
+  range       Float
+  name        String
+  characters  Character @relation(fields: [characterId], references: [id])
+  characterId Int
+}
+
+model User {
+  id          Int     @id @default(autoincrement())
+  name        String
+  desiredName String?
+  scores      Score[]
+}
+
+model Score {
+  id            Int       @id @default(autoincrement())
+  picture       Picture   @relation(fields: [pictureId], references: [id])
+  hits          Int
+  pictureId     Int
+  user          User      @relation(fields: [userId], references: [id])
+  userId        Int       @unique
+  timeStarted   DateTime
+  timeCompleted DateTime?
+}
