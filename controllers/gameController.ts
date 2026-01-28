@@ -53,8 +53,18 @@ const changeName = async (req: Request, res: Response) => {
     },
   });
 
+
+
   if (userExists) {
     try {
+      const scoreExists = await prisma.score.findFirst({
+        where: {
+          userId: userExists.id,
+        },
+      });
+
+      if (scoreExists?.timeCompleted) throw new Error('UserName already exists')
+
       await prisma.user.update({
         where: {
           id: userExists.id,
@@ -66,6 +76,7 @@ const changeName = async (req: Request, res: Response) => {
       });
     } catch (e) {
       console.log(e);
+      res.status(400).json(e);
     }
     res.status(200).json({ nameChanged: true });
   } else {
@@ -149,8 +160,8 @@ const tryHit = async (req: Request, res: Response, next: NextFunction) => {
 
     const guessDim = guess?.dimensions[0];
 
-    // console.log(`y: ${y}, other y: ${guessDim?.y}`)
-    // console.log(`x: ${x}, other x: ${guessDim?.x}`)
+    console.log(`y: ${y}, other y: ${guessDim?.y}`)
+    console.log(`x: ${x}, other x: ${guessDim?.x}`)
 
     if (
       x >= guessDim?.x - (guessDim?.range ? guessDim?.range : 0.03) &&
