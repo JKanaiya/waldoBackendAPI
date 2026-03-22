@@ -107,7 +107,7 @@ describe("api calls for waldo game", () => {
       .expect("Content-Type", /json/)
       .set("Accept", "application/json")
       .send({
-        name: "desired",
+        name: "Desired",
         initName: "user",
       })
       .expect(200);

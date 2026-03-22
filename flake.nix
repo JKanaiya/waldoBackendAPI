@@ -16,7 +16,7 @@
     pkgs = import nixpkgs {inherit system;};
     prisma = prisma-utils.lib.prisma-factory {
         inherit pkgs;
-        hash = "sha256-0gGhsv6cwlu7HDRAKRgSSIZ7NCCRo8g+Q3sdADjIAL4=";
+        hash = "sha256-dzjXzESZPHh3OvkqkPDzyaeRuoqSOe+8rysUsI6Bs8M=";
         npmLock = ./package-lock.json; # <--- path to our package-lock.json file that contains the version of prisma-engines
       };
     in {
@@ -38,11 +38,6 @@
         prisma-engines_7
         # prisma-language-server
       ];
-        # TODO: struct this properly, such that the direnv uses this automatically
-
-      # database env vars 
-      DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/waldo;
-      TEST_DATABASE_URL = postgresql://jonathan:jonathan@localhost:5432/test_waldo;
 
       shellHook = ''
           exec zsh

@@ -10,10 +10,15 @@ const dimensionMatches = {
   "800": 3,
   "600": 4,
   "400": 5,
+
 };
 
 const addPic = async (req: Request, res: Response) => {
-  const picAdded = await prisma.picture.create({});
+  const picAdded = await prisma.picture.create({
+
+
+  });
+
 
   res.json(picAdded);
 };
