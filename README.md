@@ -1,7 +1,7 @@
 # FindWaldoAPI
 
-FindWaldo API provides the backend API for these projects: 
-2. https://github.com/JKanaiya/WhereisWaldoFrontend
+FindWaldo API provides the backend API for this project: 
+https://github.com/JKanaiya/WhereisWaldoFrontend
 
 ## Usage
 
